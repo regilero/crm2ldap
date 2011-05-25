@@ -1,0 +1,4 @@
+CRM2LDAP
+========
+
+Python daemon Pushing CRM contacts, organisations and users to a LDAP branch. Support for SugarCRM, CiviCRM, OpenLDAP
