@@ -1,0 +1,45 @@
+* Why not using MySQL as a backend for OpenLDAP?
+------------------------------------------------
+We tried it. It's awfully slow. The primary goal of an LDAP server is to provide a fast-read access, something realy faster than 
+a relationnal database read access. Using a relationnal database as a backend seems a bad idea. But there's worst. MySQL is not
+an object-database, most LDAP queries requires object inheritance checks, and this generates a very very big number of queries 
+in openLDAP-mysql backend implementations.
+
+* Why we should restrict write access on the OpenLDAP branch storing contacts infos?
+-------------------------------------------------------------------------------------
+Because on every modification of the contact or the account related to this contact in SugarCRM the contact will be re-created
+by the sync scripts. And anything not stored in MySQL sugar database will be lost.
+
+* Have you tried it with Active Directory?
+------------------------------------------
+No. But why not, if you do so tell us.
+
+* Have you tried it with Oracle backend?
+----------------------------------------
+No. But you can test it. You'll certainly have to re-do the triggers in an Oracle way. Then some queries may be re-done as well,
+like group by queries in --report options fo the manager script.
+
+* Why this **** fields isn't available on Outlook/Thunderbird version xxxx?
+---------------------------------------------------------------------------
+Outlook and Thunderbird doesn't provides LDAP mapping configuration. You'll have to find out what attribute they want and adjust
+the mapping in the synchro script. If your OpenLDAP doesnt provides the required attribute see extension.schema and add you own
+attribute there.
+And please report your findings, let's make it available for next users.
+
+* Reading ldap_sync columns values in MySQL, what does the ints means?
+----------------------------------------------------------------------
+ldap_sync status is:
+	0: not initialized : this field was reset via reset.sql or as yet never been recorded in LDAP
+	1: sync : OK, this field is normally in the same state in LDAP (if he should be there)
+	2: sync started : sync is actually running on this field, or as stopped before the end, the --force option of sync script can recheck that row
+	3: not sync anymore : field has been updated in MySQL and not yet in LDAP, it will comme soon
+
+* I have made some big data manipulations (backup recovery, LDAP branch deleted, strange things) and now I'm not sure anymore of the sync state, what should I do?
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Restart the whole process, for that:
+- delete the LDAP branch where synchronised contacts and/or synchrosnised users are stored. Well do not delete the ou, but remove all records in the branch.
+- run the sql/reset.sql script on the sugarcrm MySQL database
+- now you can wait for your crontab syncs to redo the job step by step, or you can run it manually for a first big synchro with a big -l parameter (for example
+you can have a database of 10 000 contacts, containing 50 000 rows -- 40 000 marked deleted --, doing the sync at 100 each minute can be quite long). Try to launch manually
+some silent synchronisation of 1000 lines:
+nice -n -15 /opt/sugar-ldap-sync/sugarLDAPManageSync.py -s -l 1000 /opt/sugar-ldap-sync

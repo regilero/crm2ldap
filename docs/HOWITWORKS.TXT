@@ -1,0 +1,40 @@
+End Result
+==========
+With theses scripts you'll have a branch in your OpenLDAP tree containing all SugarCRM contacts.
+Theses contacts will contains several attributes which will make informations available for thunderbird contact manager or Outlook.
+SugarCRM will remain the only place where you can edit your contacts, and this openLDAP branch is there to give a fast and 
+search-efficient way to find contact informations.
+Contacts having several accounts (companies) will be present several times in openLDAP, see it as a distinct vcard for each company.
+
+How it Works
+============
+
+*MySQL-Triggers
+---------------
+ The first part of this system is an 'ldap_sync' column added in several tables in MySQL. This column tracks the sync status of 
+the referring row. Some triggers are added on the table to automatically change the ldap_sync status when SugarCRM is creating or 
+modifying the row. In SugarCRM even a 'delete' is just a 'modify', so theses triggers can track all changes very well.
+the contact table is tracked, but the custom contact fields table as well. We also track the account table (as a contact can be 
+related to an account) and the contact-account join table. Add to this the email table and the account custom field table and 
+that's all.
+
+So the first part of this system is a sql commands file which build this tracking system. An uninstall.sql file is given which can 
+revert all changes. A reset.sql file is as well given to reset all sync status in MySQL.
+
+* Manager Script
+----------------
+A manager python script is given which reads the ldap_sync status on MYSQL and count how many rows should be resynced with OpenLDAP.
+Then he will use the next script to launch theses synchros. A --report option will give you some statistics (not all currently) about 
+the sync status of MySQL.
+Depending on the unsynced time you can deserve and how much changes you expect you'll have to adjust the maximum number of sync this 
+script will launch each times he runs and the gaps between each run.
+For example with 100 syncs max, if tests show you that 100 syncs are done in 40s, you can run this script every minute.
+
+* Synchro script
+----------------
+The synchro script reads on contact from MySQl with all related available information and make one record in OpenLDAP per account for
+this contact. If a previous openLDAP record was there he's deleted. That's why this openLDAP branch should only be a read branch :-)
+everything written there by some other source would be deleted.
+You can adjust this script to change the mapping of sugarCRM fields and openLDAP attributes. You should for example adjust you custom
+fields. You can as well try to find where your specific #*!$$"&* version of LDAP-based contact manager (Outlook, thunderbird, anything else)
+wants to find the informations, each one is different and very few of them are customizable.

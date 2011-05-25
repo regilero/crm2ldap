@@ -1,0 +1,32 @@
+Changelog
+=========
+0.11 - released SugarForge-beta3
+--------------------------------
+* detect absence of custom account and contact tables
+
+0.10 - released SugarForge-beta2
+--------------------------------
+* adding a reset.sql script, to reset all sync status at 0
+* adding a sugarLDAPUserSync and sugarLDAPManageSyncUsers to sync SugarCRM users on an LDAP branch
+
+0.9 - released SugarForge-beta
+------------------------------
+* temporary remove python egg formatting
+* adding cutom fields support [guillaume cheramy, regis leroy]
+* various bugfixes (deleted accounts, unknown ldap attributes, empty string value)
+* bigger documentation, most documentation contents merged in docs/INSTALL.TXT [regis leroy]
+
+0.2 - Unreleased
+----------------
+
+* Packaging as egg [toutpt]
+* Add dependencies to MySQL-python and python-ldap [toutpt]
+* Move documentation from source to README [toutpt]
+* Move main to console script
+
+0.1 - Unreleased
+----------------
+
+* Add sugarLDAPManageSynch: detect contact to synch and call contact script [regis leroy]
+* Add sugarLDAPContactSynch: synch a contact based on id in LDAP [regis leroy]
+

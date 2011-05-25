@@ -1,0 +1,19 @@
+0.9 -> 0.10:
+------------
+If you want to add the user synchronisation
+run this sql script:
+-- START SQL
+-- If your base is not 'sugarcrm' then adjust it here.
+USE sugarcrm ;
+ALTER TABLE users ADD COLUMN ldap_uid INTEGER UNIQUE NOT NULL AUTO_INCREMENT;
+ALTER TABLE users ADD COLUMN ldap_sync TINYINT DEFAULT 0;
+DROP TRIGGER IF EXISTS syncldap_users_beforeupdate;
+CREATE TRIGGER syncldap_users_beforeupdate BEFORE UPDATE ON users FOR EACH ROW
+        BEGIN IF ((NEW.date_modified <> OLD.date_modified) OR (NEW.user_hash <> OLD.user_hash))THEN SET NEW.ldap_sync=3; END IF; END;//
+delimiter ;
+-- END SQL
+Then test it and install it:
+exemple: /opt/sugar-ldap-sync/sugarLDAPManageSyncUsers.py -v -l 1 /opt/sugar-ldap-sync
+Install in crontab (crontab -e)
+# Run sugarcrm==>OpenLDAP synchro every minute (except the first), grouped by 100 sync tasks USERS
+1-59 * * * *    nice -n 10 /opt/sugar-ldap-sync/sugarLDAPManageSyncUsers.py -s -l 100 /opt/sugar-ldap-sync

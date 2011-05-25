@@ -1,0 +1,99 @@
+SugarCRM-OpenLDAP-Contacts SYNC
+===============================
+You have some contacts in a SugarCRM MySQL base.
+Want them in an openLDAP?
+Using MySQL as an OpenLDAP backend is a no-way (really bad perf.)
+Theses scripts will help you maintain a specific branch in your OpenLDAP with synchronised contacts from MYSQL.
+SugarCRM is the only write place for theses contacts and OpenLDAP is a fast-read access for them, available as addressbok for Thunderbird and Outlook.
+There is also a script to retrieve SugarCRM users on an LDAP branch.
+
+
+Requirements
+============
+Python
+------
+you'll need python-mysqldb and python-ldap packages
+
+OpenLDAP
+--------
+you'll need as well mozilla.schema in /etc/ldap/schemas/, get it from https://wiki.mozilla.org/MailNews:Mozilla_LDAP_Address_Book_Schema
+and you could need as well extension.schema for some Outlook fields. Both are normally joined with theses sources
+add theses line to your slapd.conf
+include         /etc/ldap/schema/mozilla.schema
+include         /etc/ldap/schema/extension.schema
+check theses files are readable by the openLDAP user and reload OpenLDAP
+extension.schema will add the following fields:
+	otherFacsimiletelephoneNumber
+	IPPhone
+	homeURL
+mozilla.schema will add:
+	homePhone
+	mail
+	mobile
+	mozillaCustom1
+	mozillaCustom2
+	mozillaCustom3
+	mozillaCustom4
+	mozillaHomeCountryName
+	mozillaHomeLocalityName
+	mozillaHomePostalCode
+	mozillaHomeState
+	mozillaHomeStreet
+	mozillaHomeStreet2
+	mozillaHomeUrl
+	mozillaNickname
+	mozillaSecondEmail
+	mozillaUseHtmlMail
+	mozillaWorkStreet2
+	mozillaWorkUrl
+	nsAIMid
+	postalCode
+	postOfficeBox
+	title
+
+MySQL
+-----
+On the database side you need some sync columns with some triggers ont them. See the attached file:
+altersugar.sql
+
+ldap_sync status is:
+	0: not initialized
+	1: sync
+	2: sync started
+	3: not sync anymore
+
+INSTALL
+=======
+You need a write access at your ldap (set it in this script), and a branch available for theses contacts (something like ou=MySugarContacts,ou=Contacts,dc=Company,dc=com).
+This write access by the sync script MUST BE THE ONLY one, edition (modif/delete) on theses ldap contacts by a third party won't be detected.
+You should better store all theses SugarCRM contacts on a specific branch of your LDAP and consider SugarCRM is the master for this branch edition,
+This script will delete and recreate the contact record in openLDAP on update, every other change not done in SugarCRM will be drop (deletion by SugarCRM is ok).
+
+Check for CUSTOM ZONE in the scripts and adjust MySQl settings in sugarLDAPManageSync.py and both your LDAP and MySQl settings in sugarLDAPContactSync.py. Then adjust the objectClass you need for your sugar-ldap contacts and the fields mapping. You can even adjust your custom fields mapping.
+
+Apply altersugar.sql on your sugarcrm database, this script use 'sugarcrm' a base name, change it to your own.
+
+Then test (see there's a -v options for verbositu on scripts) the sugarLDAPContactSync.py with one sugar ID as parameter. If all went well you can test sugarLDAPManageSync.py by giving hime the max number of records to sync and the base_path to find the sugarLDAPContactSync.py script.
+If it's ok then plan theses jobs on the crontab (with crontab -e as root for example).
+exemple: /opt/sugar-ldap-sync/sugarLDAPManageSync.py -v -l 1 /opt/sugar-ldap-sync
+
+Crontab Example:
+# m h  dom mon dow   command
+# Run sugarcrm==>OpenLDAP synchro every minute (except the first), grouped by 100 sync tasks
+1-59 * * * *    nice -n 10 /opt/sugar-ldap-sync/sugarLDAPManageSync.py -s -l 100 /opt/sugar-ldap-sync
+# Run sugarcrm==>OpenLDAP synchro every minute, grouped by 100 sync tasks. This one try to collect as well sync errors still running
+0 * * * *       nice -n 10 /opt/sugar-ldap-sync/sugarLDAPManageSync.py -s --force -l 100 /opt/sugar-ldap-sync
+
+If you want to add the User synchronisation then you'll have to do the same for Users with the manager script sugarLDAPManageSyncUsers.py
+test it :
+exemple: /opt/sugar-ldap-sync/sugarLDAPManageSyncUsers.py -v -l 1 /opt/sugar-ldap-sync
+Install in crontab (crontab -e)
+# Run sugarcrm==>OpenLDAP synchro every minute (except the first), grouped by 100 sync tasks USERS
+1-59 * * * *    nice -n 10 /opt/sugar-ldap-sync/sugarLDAPManageSyncUsers.py -s -l 100 /opt/sugar-ldap-sync
+
+RECOVERY
+--------
+For records in errors which have an ldap_sync status at 2 use the --force in sugarLDAPManageSync.py (like the last line in the crontab example)
+To get all the things back at initial state delete your contacts from ldap (only on the corresponding branch) and set all ldap_sync status to 0 with an SQL query.
+"UPDATE "
+

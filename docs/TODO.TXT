@@ -1,0 +1,8 @@
+* detect absence of ldapsync column before deleting it on sql queries
+* rewrite in better python, use toutpt exemple as base of 'good python'
+* use a central configuration file (avoid database redefinition in all scripts)
+* provide openLDAP ACL example on the contact
+* provide user_rights commands for security of stored configuration data (openLDAP/MYSQL access)
+* extract crontab as a file to deploy in crontab.d
+* provide default generic linux PATH for the scripts
+* merge sugarLDAPManageSyncUsers et sugarLDAPManageSync, the first one should be only an option in the second one
