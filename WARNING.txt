@@ -1,0 +1,7 @@
+WARNING TRIGGERS
+================
+Installed triggers can be removed with the uninstall.sql file. Be aware that MySQL triggers can have one side effect on database migration:
+* ensure your databases dumps contains triggers (or you'll need to rerun the install script on the new database, without the column creation instructions)
+* use root@localhost to create triggers (sql install script) OR ENSURE you USE THE SAME USER/HOST mechnism to access the database on  the new DB server: 
+  if you did not use root@localhost to create the triggers but foo@localhost, then the triggers are associated with foo@localhost. If on the new server
+  foo@localhost is not a known user in MySQL triggers will fail (yes, this is a shame).

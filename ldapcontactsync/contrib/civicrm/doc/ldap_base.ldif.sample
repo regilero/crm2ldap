@@ -1,0 +1,41 @@
+# Base Record
+dn: dc=example,dc=com
+description: example.com ldap directory synced with civicrm
+dc: example
+o: example.com
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+
+# Ou for Individuals / Organizations and Users
+dn: ou=Contacts,dc=example,dc=com
+ou: Contacts
+description: Here we store contacts and organizations
+objectClass: organizationalUnit
+
+# Subtree for People
+dn: ou=People,ou=Contacts,dc=example,dc=com
+ou: People
+objectClass: organizationalUnit
+
+# Subtree for Organizations
+dn: ou=Organizations,ou=Contacts,dc=example,dc=com
+ou: Organizations
+objectClass: organizationalUnit
+
+# Subtree of People for login Users (for external apps maybe)
+dn: ou=Users,ou=People,dc=example,dc=com
+ou: Users
+objectClass: organizationalUnit
+
+dn: ou=CiviCRM,ou=Users,ou=People,dc=example,dc=com
+ou: CiviCRM
+objectClass: organizationalUnit
+
+# Specific user who could read datas for Outlook / Thunderbird 
+dn: uid=annuaire,dc=example,dc=com
+description: Utilisateur pour la lecture des infos de l'annuaire
+uid: annuaire
+userPassword: {SHA}2I__here_base64_encoded_password_in_SHA_=
+objectClass: account
+objectClass: simpleSecurityObject

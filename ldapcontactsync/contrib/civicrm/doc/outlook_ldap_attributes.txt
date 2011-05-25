@@ -1,0 +1,31 @@
+Known mapping for Outlook and LDAP attributes:
+===============================================
+some hints:
+LdapField                   OutlookField       Attr. in   Object class
+--------------------------  -----------------  ---------  ----------------------
+o (organization)            Company            core       inetOrgPerson
+ou (o unit)                 Service            core       organizationalPerson
+givenname                   firstname          extension  inetOrgPerson
+initials                    2nd firstname      core       inetOrgPerson
+sn (surname)                Lastname           core       objectPerson
+cn (common name)            Name to show       core       objectPerson
+mail                        email              core       inetOrgPerson
+postaladdress               pro address        core       organizationalPerson
+telephonenumber             Phone (pro)        core       organizationalPerson
+facsimiletelephonenumber    Fax (pro)          core       organizationalPerson
+physicalDeliveryOfficeName  Office (pro)       core       organizationalPerson
+postalcode	                Postal Code (pro ) core       organizationalPerson
+l (location)	            City (pro)         core       organizationalPerson
+c (country)	                Country (pro)      core       officePerson
+title	                    Title (pro)        ???        ???
+homePostalAddress           address (home)     cosine     inetOrgPerson
+homePhone                   phone (home)       cosine     inetOrgPerson
+otherFacsimiletelephoneNumber phone (fax home) extension  officePerson
+cellphone                   mobile phone       ???        ???
+--------------------------  -----------------  ---------  ----------------------
+N.B.: For postaladdress & homePostalAddress: adding a '$' make a carriage return
+example: Clive Steps$King Charles Street
+
+other infos :
+http://tldp.org/HOWTO/archived/LDAP-Implementation-HOWTO/schemas.html
+https://wiki.mozilla.org/MailNews:LDAP_Address_Books

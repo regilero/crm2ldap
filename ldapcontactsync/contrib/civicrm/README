@@ -1,0 +1,24 @@
+There is a doc subdirectory where you can find some usefull infos on ldap
+
+There is documentation on Sugar-Ldap-Contact-Sync program that apply mostlyto this civicrm port.
+The job is the same, the install process is the same. Please read instructions from there (parent directories)
+
+Differences between CiviCRM sync and SugarCRM sync:
+===================================================
+* table structure is not the same :-)
+* User Sync: drupal user synchronisation cannot be based only on update-ldap_sync_status-with-triggers, as drupal really
+removes the user row. So we add a deleted_suer table updated on delete trigger to track users that should be deleted
+in LDAP. Once the deletion is done on Drupal this table is cleanup up.
+* User Sync: Drupal6 does not store the md5 password in a hashed form, so we must apply some unhexify and base64encode stuff to get the godd
+password in LDAP.
+* Contact Sync: custom fields are not handled yet
+
+The final Crontab can be:
+#sync civicrm Individuals to ldap
+*/5 * * * *    nice -n 10 /opt/civi-ldap-sync/civiLDAPManage_IndividualSync.py -s -l 100 /opt/civi-ldap-sync/civiLDAPContact_IndividualSync.py
+03  * * * *    nice -n 19 /opt/civi-ldap-sync/civiLDAPManage_IndividualSync.py -s -f /opt/civi-ldap-sync/civiLDAPContact_IndividualSync.py
+*/10 * * * *   nice -n 10 /opt/civi-ldap-sync/civiLDAPManage_OrganizationSync.py -s -l 100 /opt/civi-ldap-sync/civiLDAPContact_OrganizationSync.py
+03  * * * * nice -n 19 /opt/civi-ldap-sync/civiLDAPManage_OrganizationSync.py -s -f /opt/civi-ldap-sync/civiLDAPContact_OrganizationSync.py
+*/10 * * * *   nice -n 10 /opt/civi-ldap-sync/civiLDAPManage_UsersSync.py -s -l 100 /opt/civi-ldap-sync/civiLDAPUsersSync.py
+03  * * * * nice -n 19 /opt/civi-ldap-sync/civiLDAPManage_UsersSync.py -s -f /opt/civi-ldap-sync/civiLDAPUsersSync.py
+

@@ -1,0 +1,19 @@
+# one ldap install process
+- first cleanup base installation (remove)
+# /etc/init.d/slapd stop
+# cd /var/lib/ldap
+# rm -rf __db.* *.bdb log.*
+
+- then setup openldap, with provided slap.conf (adapt it)
+- see provided extra schemas for thunderbird
+- testing base tree (from a given ldif)
+slapadd -v -u -c -f /etc/ldap/slapd.conf -l ldap_base.ldif 
+
+- creating base tree
+slapadd -v -f /etc/ldap/slapd.conf -l ldap_base.ldif 
+
+- beware, if install is run with root user files in /var/lib/ldap are owned by root,
+if the ldap server is running with an openldap user you shoudl change rights:
+# cd /var/lib/ldap
+# chown openldap.openldap *
+# /etc/init.d/slapd start
