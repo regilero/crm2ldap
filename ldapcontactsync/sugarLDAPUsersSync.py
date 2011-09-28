@@ -420,8 +420,8 @@ users.id
             sys.exit(1)
         printer('db result ::' + str(res),2)
         user = res
-	if (None != user['user_hash']):
-		user['user_hash'] = '{MD5}'+user['user_hash']
+        if (None != user['user_hash']):
+            user['user_hash'] = '{MD5}'+user['user_hash']
         printer('Success',2)
         printer('Find additional infos for our user ID email_addresse :' + SYNCID,1)
         c.close()
@@ -469,7 +469,7 @@ users.id
         print e
         sys.exit(1)
 
-    # build the sync data	
+    # build the sync data
     ldif_writer=ldif.LDIFWriter(sys.stdout)
     ldap_entries = []
     i = 0
@@ -485,14 +485,14 @@ users.id
             continue
         result = filterTableContent(val)
         printer(result,2,'utf-8')
-	
-	if 'ldap_uid'==field:
-		if (None != user['user_name']):
-			user_id = user['user_name']
-		result = user_id
-        	# here we handle the UID
-        	printer('setting dn entry for uid '+ result,2)
-        	ldap_entries[-1]['dn'] = 'uid=' + result + ',' + USERS_BASE
+        
+        if 'ldap_uid'==field:
+            if (None != user['user_name']):
+                user_id = user['user_name']
+                result = user_id
+                # here we handle the UID
+                printer('setting dn entry for uid '+ result,2)
+                ldap_entries[-1]['dn'] = 'uid=' + result + ',' + USERS_BASE
 
         target_key = KEYS_MAPPING[field]
         if (None == target_key):
