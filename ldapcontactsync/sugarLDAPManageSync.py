@@ -68,9 +68,9 @@ db = None
 # FUNCTIONS
 def printer(thestring,log_level,input_encoding='latin1'):
     """handle the console encoding for printing to console and the verbosity
-	
-	log_level is 1 or 2, level 2 are displayed only if VERBOSITY is 2 (debug)
-	"""
+
+    log_level is 1 or 2, level 2 are displayed only if VERBOSITY is 2 (debug)
+    """
     global VERBOSITY
     if (log_level <= VERBOSITY):
         try: 
@@ -85,9 +85,9 @@ def printer(thestring,log_level,input_encoding='latin1'):
 def main_parseopts():
     """ Handle args given in the command line.
 
-	Return the file name or exit the script if there is none or if a -h, -v
-	or -? was given.
-	"""
+    Return the file name or exit the script if there is none or if a -h, -v
+    or -? was given.
+    """
     global VERBOSITY
     global LIMIT
     global FORCE_COLLECT_MODE
@@ -300,23 +300,23 @@ left join `email_addresses` on `email_addr_bean_rel`.`email_address_id`=`email_a
             sql = sql + " or `contacts`.`ldap_sync`=2 "
         sql = sql + """ or `contacts`.`ldap_sync`=3)
 or (
-	(`contacts`.`deleted`=0 ) and (
-		(`accounts_contacts`.`ldap_sync`=0 and `accounts_contacts`.`deleted`=0)
-		or (`accounts_contacts`.`ldap_sync`=3)
-		or (`accounts`.`ldap_sync`=0 and `accounts`.`deleted`=0)
-		or (`accounts`.`ldap_sync`=3)
-		or (`email_addr_bean_rel`.`ldap_sync`=0 and `email_addr_bean_rel`.`deleted`=0)
-		or (`email_addr_bean_rel`.`ldap_sync`=3)
-		or (`email_addresses`.`ldap_sync`=0 and `email_addresses`.`deleted`=0)
-		or (`email_addresses`.`ldap_sync`=3)"""
+    (`contacts`.`deleted`=0 ) and (
+        (`accounts_contacts`.`ldap_sync`=0 and `accounts_contacts`.`deleted`=0)
+        or (`accounts_contacts`.`ldap_sync`=3)
+        or (`accounts`.`ldap_sync`=0 and `accounts`.`deleted`=0)
+        or (`accounts`.`ldap_sync`=3)
+        or (`email_addr_bean_rel`.`ldap_sync`=0 and `email_addr_bean_rel`.`deleted`=0)
+        or (`email_addr_bean_rel`.`ldap_sync`=3)
+        or (`email_addresses`.`ldap_sync`=0 and `email_addresses`.`deleted`=0)
+        or (`email_addresses`.`ldap_sync`=3)"""
         if (CONTACT_CUSTOM):
-		    sql = sql + """
+            sql = sql + """
             or (`contacts_cstm`.`ldap_sync`=0)
-    		or (`contacts_cstm`.`ldap_sync`=3)"""
+            or (`contacts_cstm`.`ldap_sync`=3)"""
         if (ACCOUNT_CUSTOM):
             sql = sql + """
-    		or (`accounts_cstm`.`ldap_sync`=0)
-	    	or (`accounts_cstm`.`ldap_sync`=3)"""
+            or (`accounts_cstm`.`ldap_sync`=0)
+            or (`accounts_cstm`.`ldap_sync`=3)"""
         sql = sql + "))"
         if FORCE_COLLECT_MODE:
             # try to add records with sync_status at 2 (running), from dead sync sessions
