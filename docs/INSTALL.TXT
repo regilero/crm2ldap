@@ -12,7 +12,14 @@ Requirements
 ============
 Python
 ------
-you'll need python-mysqldb and python-ldap packages
+you'll need some python packages
+sudo easy_install MySQL-python
+sudo easy_install python-ldap
+# for the next crm2ldap project we'l add some others
+#sudo easy_install python-daemon
+#sudo easy_install ConfigParser
+#sudo easy_install simplejson
+
 
 OpenLDAP
 --------

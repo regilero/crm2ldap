@@ -5,14 +5,20 @@ a relationnal database read access. Using a relationnal database as a backend se
 an object-database, most LDAP queries requires object inheritance checks, and this generates a very very big number of queries 
 in openLDAP-mysql backend implementations.
 
+* Which CRm are supported?
+--------------------------
+The first CRM was sugarCRM v5. It should work on v6 (soon to be tested)
+We now have a contribution (in contrib subdirectory) for CiviCRM contacts (people and organizations, as well as Drupal users)
+
 * Why we should restrict write access on the OpenLDAP branch storing contacts infos?
 -------------------------------------------------------------------------------------
 Because on every modification of the contact or the account related to this contact in SugarCRM the contact will be re-created
 by the sync scripts. And anything not stored in MySQL sugar database will be lost.
+Remember the CRM is the only master of this LDAP branch (your LDAP tree can contain several branches, we don't care about other branches)
 
 * Have you tried it with Active Directory?
 ------------------------------------------
-No. But why not, if you do so tell us.
+No. But why not, if you do so tell us. Feedback welcome.
 
 * Have you tried it with Oracle backend?
 ----------------------------------------
@@ -37,8 +43,8 @@ ldap_sync status is:
 * I have made some big data manipulations (backup recovery, LDAP branch deleted, strange things) and now I'm not sure anymore of the sync state, what should I do?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Restart the whole process, for that:
-- delete the LDAP branch where synchronised contacts and/or synchrosnised users are stored. Well do not delete the ou, but remove all records in the branch.
-- run the sql/reset.sql script on the sugarcrm MySQL database
+- delete the LDAP branch where synchronised contacts and/or synchronized users are stored. Well do not delete the ou, but remove all records in the branch.
+- run the sql/reset.sql script on the sugarcrm/civicrm MySQL database
 - now you can wait for your crontab syncs to redo the job step by step, or you can run it manually for a first big synchro with a big -l parameter (for example
 you can have a database of 10 000 contacts, containing 50 000 rows -- 40 000 marked deleted --, doing the sync at 100 each minute can be quite long). Try to launch manually
 some silent synchronisation of 1000 lines:

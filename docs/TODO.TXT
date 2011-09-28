@@ -1,8 +1,13 @@
-* detect absence of ldapsync column before deleting it on sql queries
+== Next Step will be the crm2ldap program ==
+* Move out of SugarForge unstable CVS server, to GitHub quite certainly
+* rename project to crm2ldap
 * rewrite in better python, use toutpt exemple as base of 'good python'
+* detect absence of ldapsync column before deleting it on sql queries
+* remove usage of sql files to get variables inside (db name, db prefix)
 * use a central configuration file (avoid database redefinition in all scripts)
 * provide openLDAP ACL example on the contact
 * provide user_rights commands for security of stored configuration data (openLDAP/MYSQL access)
-* extract crontab as a file to deploy in crontab.d
 * provide default generic linux PATH for the scripts
 * merge sugarLDAPManageSyncUsers et sugarLDAPManageSync, the first one should be only an option in the second one
+* integrate CiviCRM contrib scripts, in a more centralized version
+* transform the script+cron mechanism into a daemon with forked children.

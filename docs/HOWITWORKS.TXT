@@ -1,8 +1,11 @@
 End Result
 ==========
-With theses scripts you'll have a branch in your OpenLDAP tree containing all SugarCRM contacts.
+With theses scripts you'll have a branch in your OpenLDAP tree containing all SugarCRM or CiviCRM contacts.
 Theses contacts will contains several attributes which will make informations available for thunderbird contact manager or Outlook.
-SugarCRM will remain the only place where you can edit your contacts, and this openLDAP branch is there to give a fast and 
+
+The CRM in this doc can be either SugarCRM or CiviCRM.
+
+The CRM will remain the only place where you can edit your contacts, and this openLDAP branch is there to give a fast and 
 search-efficient way to find contact informations.
 Contacts having several accounts (companies) will be present several times in openLDAP, see it as a distinct vcard for each company.
 
@@ -12,8 +15,8 @@ How it Works
 *MySQL-Triggers
 ---------------
  The first part of this system is an 'ldap_sync' column added in several tables in MySQL. This column tracks the sync status of 
-the referring row. Some triggers are added on the table to automatically change the ldap_sync status when SugarCRM is creating or 
-modifying the row. In SugarCRM even a 'delete' is just a 'modify', so theses triggers can track all changes very well.
+the referring row. Some triggers are added on the table to automatically change the ldap_sync status when the CRM is creating or 
+modifying the row. In SugarCRM and CiviCRM even a 'delete' is just a 'modify', so theses triggers can track all changes very well.
 the contact table is tracked, but the custom contact fields table as well. We also track the account table (as a contact can be 
 related to an account) and the contact-account join table. Add to this the email table and the account custom field table and 
 that's all.
@@ -35,6 +38,6 @@ For example with 100 syncs max, if tests show you that 100 syncs are done in 40s
 The synchro script reads on contact from MySQl with all related available information and make one record in OpenLDAP per account for
 this contact. If a previous openLDAP record was there he's deleted. That's why this openLDAP branch should only be a read branch :-)
 everything written there by some other source would be deleted.
-You can adjust this script to change the mapping of sugarCRM fields and openLDAP attributes. You should for example adjust you custom
-fields. You can as well try to find where your specific #*!$$"&* version of LDAP-based contact manager (Outlook, thunderbird, anything else)
+You can adjust this script to change the mapping of the CRM fields and openLDAP attributes. You should for example adjust your custom
+fields (only for SugarCRM). You can as well try to find where your specific #*!$$"&* version of LDAP-based contact manager (Outlook, thunderbird, anything else)
 wants to find the informations, each one is different and very few of them are customizable.

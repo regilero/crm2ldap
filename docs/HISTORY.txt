@@ -1,5 +1,10 @@
 Changelog
 =========
+0.12 - released SugarForge-beta4
+--------------------------------
+* contrib: CiviCRM (Drupal) support, you can now push CiviCRM contacts to LDAP
+* fix bad tabulations in python code
+
 0.11 - released SugarForge-beta3
 --------------------------------
 * detect absence of custom account and contact tables
