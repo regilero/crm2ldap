@@ -267,24 +267,24 @@ def _fill_reptable():
         for code in codes :
             _REPTABLE[code] = repchar
 
-def suppression_diacritics(s) :
-    """Suppression des accents et autres marques. from http://wikipython.flibuste.net/moin.py/JouerAvecUnicode
+def remove_diacritics(s) :
+    """Remove accents and other bad markup. from http://wikipython.flibuste.net/moin.py/JouerAvecUnicode
 
-    @param s: le texte à nettoyer.
-    @type s: str ou unicode
-    @return: le texte nettoyé de ses marques diacritiques.
+    @param s: text to cleanup.
+    @type s: utf8 string
+    @return: cleaned up text, diacritics replaced.
     @rtype: unicode
     """
     if isinstance(s,str) :
         s = unicode(s,"utf8","replace")
     return s.translate(_REPTABLE)
 
-def suppression_diacritics_utf8(s) :
-    """Suppression des accents et autres marques. from http://wikipython.flibuste.net/moin.py/JouerAvecUnicode
+def remove_diacritics_utf8(s) :
+    """Remove accents and other bad markup. from http://wikipython.flibuste.net/moin.py/JouerAvecUnicode
 
-    @param s: le texte à nettoyer.
-    @type s: str en utf8
-    @return: le texte nettoyé de ses marques diacritiques.
+    @param s: text to cleanup.
+    @type s: utf8 string
+    @return: cleaned up text, diacritics replaced.
     @rtype: unicode
     """
     return s.translate(_REPTABLE)
@@ -294,10 +294,19 @@ def affectLDAPField(targetkey,result,ldap_entries) :
     if ('mail' == targetkey) : 
         tmpresult = result.encode('utf-8','replace')
         printer('email before: '+tmpresult,2)
-        result = suppression_diacritics(tmpresult)
+        result = remove_diacritics(tmpresult)
         printer('email after: '+result,2)
+
+        if (targetkey in ('telephoneNumber','facsimileTelephoneNumber','mobile','homePhone')):
+            tmpresult = result.encode('utf-8','replace')
+            printer('phone before: '+tmpresult,2)
+            allowedchars = ' 0123456789,.+()'
+            result = ''.join([c for c in tmpresult if c in allowedchars])
+            printer('phone after: '+result,2)
+
     if (not ldap_entries[-1]['entry'].has_key(targetkey)):
         ldap_entries[-1]['entry'][targetkey] = []
+
     ldap_entries[-1]['entry'][targetkey].append(result.encode('utf-8','replace'))
     return ldap_entries
 
