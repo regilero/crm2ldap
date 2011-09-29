@@ -613,9 +613,9 @@ where `email_addr_bean_rel`.`deleted`='0' and `email_addresses`.`deleted`='0' AN
             continue
         result = filterTableContent(val)
         printer(result,2,'utf-8')
-        # here we handle the UID, and we add the company_id to get one contacts per company
+        # here we handle the UID, and we add the company_id to get one contact per company
         if 'ldap_uid'==field:
-            #BUGFIX: do not set empty value fro deleted assocs, as the contact were maybe already created
+            #BUGFIX: do not set empty value from deleted assocs, as the contact were maybe already created
             # with that assoc, and we need the complete id to delete him
             #if (contact['company_del']==0 and contact['assoc_del']==0):
             if (None != contact['company_id']):
